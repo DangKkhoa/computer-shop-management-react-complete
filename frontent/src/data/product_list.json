@@ -1,0 +1,152 @@
+[
+  {
+    "image": "https://anphat.com.vn/media/product/250_50828_laptop_apple_macbook_air_13_inch_m2_8cpu8gpu16gb256gb___silver_mc7v4saa__1_.jpg",
+    "name": "MacBook Air M2 13 inch 2023",
+    "quantity": 24,
+    "price": 41444228
+  },
+  {
+    "image": "https://example.com/images/macbook_pro_m3_14_inch_2024.jpg",
+    "name": "MacBook Pro M3 14 inch 2024",
+    "quantity": 17,
+    "price": 38935624
+  },
+  {
+    "image": "https://example.com/images/dell_xps_13_plus_9320.jpg",
+    "name": "Dell XPS 13 Plus 9320",
+    "quantity": 30,
+    "price": 37594137
+  },
+  {
+    "image": "https://example.com/images/dell_inspiron_15_3520.jpg",
+    "name": "Dell Inspiron 15 3520",
+    "quantity": 6,
+    "price": 22960565
+  },
+  {
+    "image": "https://example.com/images/asus_zenbook_14_oled_ux3402.jpg",
+    "name": "Asus ZenBook 14 OLED UX3402",
+    "quantity": 16,
+    "price": 37780126
+  },
+  {
+    "image": "https://example.com/images/asus_rog_zephyrus_g14.jpg",
+    "name": "Asus ROG Zephyrus G14",
+    "quantity": 19,
+    "price": 38264170
+  },
+  {
+    "image": "https://example.com/images/hp_spectre_x360_14.jpg",
+    "name": "HP Spectre x360 14",
+    "quantity": 22,
+    "price": 20728992
+  },
+  {
+    "image": "https://example.com/images/hp_envy_13_x360.jpg",
+    "name": "HP Envy 13 x360",
+    "quantity": 8,
+    "price": 45164465
+  },
+  {
+    "image": "https://example.com/images/lenovo_legion_5_pro.jpg",
+    "name": "Lenovo Legion 5 Pro",
+    "quantity": 19,
+    "price": 48843258
+  },
+  {
+    "image": "https://example.com/images/lenovo_thinkpad_x1_carbon_gen_11.jpg",
+    "name": "Lenovo ThinkPad X1 Carbon Gen 11",
+    "quantity": 27,
+    "price": 40560690
+  },
+  {
+    "image": "https://example.com/images/acer_swift_x_sfx14.jpg",
+    "name": "Acer Swift X SFX14",
+    "quantity": 5,
+    "price": 48998981
+  },
+  {
+    "image": "https://example.com/images/acer_nitro_5_an515.jpg",
+    "name": "Acer Nitro 5 AN515",
+    "quantity": 27,
+    "price": 45797991
+  },
+  {
+    "image": "https://example.com/images/msi_stealth_15m.jpg",
+    "name": "MSI Stealth 15M",
+    "quantity": 25,
+    "price": 46636071
+  },
+  {
+    "image": "https://example.com/images/msi_gf63_thin.jpg",
+    "name": "MSI GF63 Thin",
+    "quantity": 24,
+    "price": 35535918
+  },
+  {
+    "image": "https://example.com/images/gigabyte_aero_16_oled.jpg",
+    "name": "Gigabyte AERO 16 OLED",
+    "quantity": 8,
+    "price": 24067379
+  },
+  {
+    "image": "https://example.com/images/gigabyte_g5_ge.jpg",
+    "name": "Gigabyte G5 GE",
+    "quantity": 16,
+    "price": 18491179
+  },
+  {
+    "image": "https://example.com/images/microsoft_surface_laptop_5.jpg",
+    "name": "Microsoft Surface Laptop 5",
+    "quantity": 16,
+    "price": 21083363
+  },
+  {
+    "image": "https://example.com/images/microsoft_surface_pro_9.jpg",
+    "name": "Microsoft Surface Pro 9",
+    "quantity": 27,
+    "price": 20978731
+  },
+  {
+    "image": "https://example.com/images/lg_gram_16.jpg",
+    "name": "LG Gram 16",
+    "quantity": 9,
+    "price": 26311227
+  },
+  {
+    "image": "https://example.com/images/samsung_galaxy_book3_pro.jpg",
+    "name": "Samsung Galaxy Book3 Pro",
+    "quantity": 30,
+    "price": 34519425
+  },
+  {
+    "image": "https://example.com/images/huawei_matebook_x_pro.jpg",
+    "name": "Huawei MateBook X Pro",
+    "quantity": 9,
+    "price": 47417046
+  },
+  {
+    "image": "https://example.com/images/razer_blade_14.jpg",
+    "name": "Razer Blade 14",
+    "quantity": 7,
+    "price": 18119921
+  },
+  {
+    "image": "https://example.com/images/alienware_x14_r2.jpg",
+    "name": "Alienware x14 R2",
+    "quantity": 7,
+    "price": 33237168
+  },
+  {
+    "image": "https://example.com/images/toshiba_dynabook_tecra_a40.jpg",
+    "name": "Toshiba Dynabook Tecra A40",
+    "quantity": 5,
+    "price": 36893694
+  },
+  {
+    "image": "https://example.com/images/fujitsu_lifebook_u7413.jpg",
+    "name": "Fujitsu Lifebook U7413",
+    "quantity": 12,
+    "price": 44456995
+  }
+]
