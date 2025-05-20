@@ -37,12 +37,17 @@ export const CartProvider = ({ children }) => {
   };
 
   const cartQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartPrice = cart.reduce((acc, item) => acc + item.retailed_price * item.quantity, 0);
 
-  const cartPrice = cart.reduce((acc, item) => acc + item.retailed_price, 0);
+  // useEffect(() => {
+  //     cart.reduce((acc, item) => acc + item.retailed_price, 0);
+  // }, [cart])
+
+
 
   const increaseQuantity = (productId) => {
     const updatedCart = cart.map((item) =>
-      item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
+      item.id === productId ? { ...item, quantity: item.quantity + 1} : item
     );
     setCart(updatedCart);
   };

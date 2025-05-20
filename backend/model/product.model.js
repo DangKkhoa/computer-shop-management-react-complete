@@ -57,7 +57,7 @@ const getProductQuantity = async () => {
 const getProductsByCategorySorted = async (category, sort, limit=8, offset=0) => {
   const searchQuery = `%${category}%`;
   const sortFormatted = sort?.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
-  const [result] = await pool.query(`SELECT * FROM product WHERE category LIKE ? ORDER BY retailed_price ${sortFormatted} LIMIT ? OFFSET ?`, [searchQuery, limit, offset]);
+  const [result] = await pool.query(`SELECT * FROM product WHERE category LIKE ? ORDER BY retailed_price ${sortFormatted} LIMIT ? OFFSET ?`, [searchQuery, Number(limit), Number(offset)]);
   return result;
 }
 

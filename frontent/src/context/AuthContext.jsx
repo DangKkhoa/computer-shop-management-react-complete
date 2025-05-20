@@ -7,8 +7,8 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const location = useLocation();
-  console.log(location.pathname);
-  const authRoutes = ['/dashboard', '/orders', '/users', '/sale-history', '/inventory', '/profile'];
+  console.log(location.pathname.startsWith('/inventory'));
+  const authRoutes = ['/dashboard', '/orders', '/users', '/sale-history', '/inventory', '/profile', '/customers'];
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate()
@@ -58,7 +58,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const authNeeded = authRoutes.some(route => location.pathname.startsWith(route));
-
+    console.log(authNeeded)
     if(!authNeeded) {
       setIsLoading(false);
       return ;

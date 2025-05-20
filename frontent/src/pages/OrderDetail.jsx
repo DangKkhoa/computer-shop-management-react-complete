@@ -140,12 +140,12 @@ const OrderDetail = () => {
             </table>
           </div>
           <div className='w-full px-20 mt-4 gap-4'>
-            <button 
+            {order.status === 'PENDING' && <button 
               className={`py-3 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600  ${!isEdited ? 'opacity-50 pointer-events-none' : ''}`}
               disabled={!isEdited}
-              onClick={() => updateOrderStatus(order.id, 'CONFIRMED')}>
+              >
                 Cập nhật
-            </button>
+            </button>} 
             <div className='float-right '>
               {order.status === 'PENDING' && <>
                 <button 
@@ -164,7 +164,7 @@ const OrderDetail = () => {
 
             {order.status === 'CONFIRMED' && <>
               <button 
-                className='py-3 px-4 bg-red-500 text-white font-bold rounded-md hover:bg-red-600'
+                className='float-right py-3 px-4 bg-red-500 text-white font-bold rounded-md hover:bg-red-600'
                 onClick={() => updateOrderStatus(order.id, 'CANCELLED')}>
                   Hủy đơn
               </button>

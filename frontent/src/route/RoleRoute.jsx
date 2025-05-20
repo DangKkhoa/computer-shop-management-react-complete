@@ -19,7 +19,8 @@ const RoleRoute = ({ children, allowRoles, allowEdit }) => {
   // }
 
   if(!user) {
-    return <Navigate to="/user/login" />
+    console.log('no user found');
+    return ;
   }
 
   if(user && !allowRoles.includes(user.role)) {
