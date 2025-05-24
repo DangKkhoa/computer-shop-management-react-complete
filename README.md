@@ -61,5 +61,5 @@ npm run dev
 ![Shop](images/Display-products.png)
 
 ### 🧾 Login
-![Login](image/Login.png)
+![Login](images/Login.png)
 
