@@ -1,4 +1,4 @@
-const { getAllProductsService, getProductByIdService, searchProductService, addProductService, deleteProductService, getProductsByCategoryService, getProductQuantityService, getSortedProductsByCategoryService } = require('../service/product.service.js');
+const { getAllProductsService, getProductByIdService, searchProductService, addProductService, deleteProductService, getProductsByCategoryService, getProductQuantityService, getSortedProductsByCategoryService, updateProductService } = require('../service/product.service.js');
 
 const getAllProducts = async (req, res) => {  
   try {
@@ -198,6 +198,44 @@ const getProductsByCategory = async (req, res) => {
   }
 } 
 
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = req.body;
+    console.log(product);
+    if(req.file) {
+      console.log("Hình ảnh: " + req.file.filename)
+      product.image = req.file.filename;
+    }
+
+    console.log(product);
+
+    const result = await updateProductService(id, product);
+    if(result.affectedRows > 0) {
+      res.status(200).json({
+        status: 'success',
+        message: 'Cập nhật sản phẩm thành công',
+        data: product
+      })
+    }
+    else {
+      res.status(404).json({
+        status: 'fail',
+        message: 'Không tìm thấy sản phẩm',
+        // data: product
+      })
+    }
+  
+  }
+  catch(err) {
+    console.error("Lỗi: " + err.message);
+    res.status(500).json({
+      status: 'fail',
+      message: err.message || 'Có lỗi xảy ra khi cập nhật sản phẩm. Vui lòng thử lại',
+    })
+  }
+}
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -205,5 +243,6 @@ module.exports = {
   addProduct, 
   deleteProduct,
   getProductsByCategory,
-  getProductQuantity
+  getProductQuantity,
+  updateProduct
 }

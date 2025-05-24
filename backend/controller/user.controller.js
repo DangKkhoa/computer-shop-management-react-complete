@@ -1,4 +1,5 @@
-const { getAllUsersService, getUserByEmailOrPhoneNumberService, getUserByIdService, addUserService, deleteUserService, setLockService, updateUserService, getUserQuantityService} = require('../service/user.service.js');
+const { sendEmail } = require('../service/email.service.js');
+const { getAllUsersService, getUserByEmailOrPhoneNumberService, getUserByIdService, addUserService, deleteUserService, setLockService, updateUserService, getUserQuantityService, updatePasswordService, updateTokenService} = require('../service/user.service.js');
 
 const getAllUsers = async (req, res) => {
   try {
@@ -89,14 +90,14 @@ const getUserQuantity = async (req, res) => {
 const addUser = async (req, res) => {
   try {
     const { firstname, lastname, email, phonenumber, role, gender } = req.body;
-    if (!firstname || !lastname || !email || !phonenumber) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Missing required fields',
-      });
-    }
+    // if (!firstname || !lastname || !email || !phonenumber) {
+    //   return res.status(400).json({
+    //     status: 'fail',
+    //     message: 'Missing required fields',
+    //   });
+    // }
 
-    const result = await addUserService({
+    const newAccount = await addUserService({
       firstname,
       lastname,
       email,
@@ -105,15 +106,37 @@ const addUser = async (req, res) => {
       gender
     });
 
+    const mailOptions = {
+      from: 'dangkkhoa10a8@gmail.com',
+      to: newAccount.email,
+      subject: 'CHÀO MỪNG NHÂN VIÊN MỚI',
+      html: `
+        <h3>Xin chào ${newAccount.firstname} ${newAccount.lastname},</h3>
+        <p>Tài khoản của bạn đã được tạo, bấm vào <a href="localhost:5173/user/login" target="_blank">đây</a> để tiếp tục</p>
+        <p><strong>Tên đăng nhập:</strong> ${newAccount.email}</p>
+        <p><strong>Mật khẩu: </strong> ${newAccount.password}</p>
+        <p style='font-size: 20px; color: red; font-style: italic'>Lưu ý: Hãy đổi mật khẩu ngay khi đăng nhập vào hệ thống. Bạn có thể đổi mật khẩu ở góc phải trên cùng sau khi đã đăng nhập</p>
+      `
+    }
+
+    sendEmail(email, mailOptions);
+
     return res.status(201).json({
       status: 'success',
       message: 'User added successfully',
-      data: result,
+      data: newAccount,
     });
 
   }
   catch(err) {
     console.error(err);
+    if(err.code === 'INPUT_MISSING') {
+      return res.status(400).json({
+        status: 'fail',
+        message: err.message,
+      });
+    }
+
     if(err.code === 'ACCOUNT_EXISTS') {
       return res.status(400).json({
         status: 'fail',
@@ -133,6 +156,7 @@ const updateUser = async (req, res) => {
     const { id } = req.params;
     console.log(id);
     const userToUpdate = req.body;
+    
     if(req.file) {
       console.log(req.file);
       userToUpdate.image = req.file.filename;
@@ -148,7 +172,7 @@ const updateUser = async (req, res) => {
     })
   }
   catch(err) {
-    console.error("Error: " + err.code);
+    console.error("Error: " + err.message);
 
     if(err.code === 'ERR_INVALID_ARG_TYPE') {
       return res.status(400).json({
@@ -187,7 +211,7 @@ const updateUser = async (req, res) => {
 
     return res.status(500).json({
       status: 'fail',
-      message: 'Internal server error'
+      message: err.message || 'Internal server error'
     })
   }
 }
@@ -248,6 +272,82 @@ const setAvailability = async (req, res, locked) => {
   }
 }
 
+const updatePassword = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const { password, newPassword, confirmedPassword } = req.body;
+    const result = await updatePasswordService(password, newPassword, confirmedPassword, id);
+
+    return res.status(200).json({
+      message: 'Mật khẩu cập nhật thành công'
+    })
+  }
+  catch(err) {
+    console.error(err);
+    if(err.code === 'USER_NOT_FOUND') {
+      return res.status(404).json({
+        message: err.message
+      })
+    }
+
+    if(err.code === 'INVALID_INPUT') {
+      return res.status(400).json({
+        message: err.message
+      })
+    }
+
+    if(err.code === 'TOO_SHORT_PASSWROD') {
+      return res.status(404).json({
+        message: err.message
+      })
+    }
+
+    if(err.code === 'PASSWORD_CONFIRM_MISSMATCH') {
+      return res.status(404).json({
+        message: err.message
+      })
+    }
+
+    if(err.code === 'WRONG_PASSWORD') {
+      return res.status(404).json({
+        message: err.message
+      })
+    }
+
+    if(err.code === 'SAME_PASSWORD') {
+      return res.status(404).json({
+        message: err.message
+      })
+    }
+
+    return res.status(500).json({
+      message: 'Internal server error'
+    }) 
+  }
+
+}
+
+const updateToken = async (req, res) => {
+  const email = req.body;
+  const code = await updateTokenService(email);
+
+  const mailOptions = {
+      from: 'l00nie@futilesandilata.net',
+      to: email,
+      subject: 'ĐẶT LẠI MẬT KHẨU',
+      html: `
+        Mã xác nhận của bạn là: ${code}
+      `
+    }
+  sendEmail(email, mailOptions)
+  res.status(200).json({
+    message: 'Code sent',
+    code: code
+  })
+}
+
+
+
 module.exports = { 
   getAllUsers, 
   getUserById, 
@@ -256,5 +356,7 @@ module.exports = {
   updateUser,
   deleteUser, 
   setAvailability,
-  getUserQuantity 
+  getUserQuantity,
+  updatePassword,
+  updateToken
 };

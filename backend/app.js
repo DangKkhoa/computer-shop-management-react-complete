@@ -11,6 +11,7 @@ const userRoute = require('./route/user.route.js');
 const productRoute = require('./route/product.route.js');
 const aiRoute = require('./route/ai.route.js');
 const orderRoute = require('./route/order.route.js');
+const saleHistoryRoute = require('./route/saleHistory.route.js');
 
 const authMiddleware = require('./middleware/auth.middleware.js');
 
@@ -44,11 +45,12 @@ const pathPrefix = '/api/v1';
 app.use(`${pathPrefix}/orders`, orderRoute);
 app.use(`${pathPrefix}/auth`, authRoute);
 app.use(`${pathPrefix}/products`, productRoute);
+app.use(`${pathPrefix}/users`, userRoute);
 app.use(authMiddleware.requireAuth);
 
-app.use(`${pathPrefix}/users`, authMiddleware.roleAuth(), userRoute);
 
-app.use(`${pathPrefix}/ai`, aiRoute);
 
+// app.use(`${pathPrefix}/ai`, aiRoute);
+app.use(`${pathPrefix}/sale-history`, saleHistoryRoute);
 
 app.listen(3000, () => console.log('http://localhost:3000'));

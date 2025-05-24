@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
-const { addOrderService, getAllOrdersService, getOrderStatusService, updateOrderStatusService, getRevenueByMonthService, getPendingOrderQuantityService, getTop5ProductsSoldService, getOrderByIdService } = require('../service/order.service');
+const { addOrderService, getAllOrdersService, getOrderStatusService, updateOrderStatusService, getRevenueByMonthService, getPendingOrderQuantityService, getTop5ProductsSoldService, getOrderByIdService, getSaleHistoryService, getSaleHistoryByPhoneOrIdService, getSaleHistoryByIdService, getOrderByPhoneOrIdService } = require('../service/order.service');
 const { addCustomerService, getCustomerByPhonenumberService } = require('../service/customer.service');
+const { sendEmail } = require('../service/email.service');
 // const { getCustomerByPhonenumber } = require('../model/customer.model');
 
 const getAllOrders = async (req, res) => {
@@ -66,7 +67,20 @@ const addOrder = async (req, res) => {
     //   }
     // }
     
-    await addOrderService(newOrder);
+    const result = await addOrderService(newOrder);
+    
+    const mailOptions = {
+      from: 'l00nie@futilesandilata.net',
+      to: result?.email,
+      subject: 'XÁC NHẬN ĐƠN HÀNG',
+      html: `
+        <h3>Xin chào ${result?.name},</h3>
+        <p>Cảm ơn bạn đã mua hàng của shop chúng tôi, mã đơn hàng của bạn là: <b>${result?.id}</b></p>
+        <p>Vui lòng bấm vào <a href="localhost:5173/my-orders/${result?.id}" target="_blank">đây</a> để xem đơn hàng của bạn</p>
+        <p style='font-size: 18px; color: red; font-style: italic'>Có vấn đề vui lòng liện hệ: +84 XXXXXXXXXX</p>
+      `
+    }
+    sendEmail(email, mailOptions);
     return res.status(201).json({
       status: 'success',
       message: 'Đặt đơn thành công',
@@ -192,6 +206,83 @@ const getOrderById = async (req, res) => {
   }
 }
 
+const getSaleHistory = async (req, res) => {
+  try {
+    const result = await getSaleHistoryService();
+    res.status(200).json({
+      status: 'success',
+      message: 'Lấy dữ liệu thành công',
+      data: result
+    })
+  }  
+  catch(err) {
+    console.error(err);
+    res.status(500).json({
+      status: 'fail',
+      message: 'Có lỗi khi lấy dữ liệu'
+    })
+  }
+
+}
+
+const searchSaleHistory = async (req, res) => {
+  try {
+    const { q } = req.query;
+    console.log(q);
+    const result = await getSaleHistoryByPhoneOrIdService(q);
+    res.status(200).json({
+      status: 'success',
+      message: 'Lấy dữ liệu thành công',
+      data: result
+    })
+  }
+  catch(err) {
+    console.error(err);
+    res.status(500).json({
+      status: 'fail',
+      message: 'Có lỗi khi lấy dữ liệu'
+    })
+  }
+}
+
+const searchOrder = async (req, res) => {
+  try {
+    const { q } = req.query;
+    console.log(q);
+    const result = await getOrderByPhoneOrIdService(q);
+    res.status(200).json({
+      status: 'success',
+      message: 'Lấy dữ liệu thành công',
+      data: result
+    })
+  }
+  catch(err) {
+    console.error(err);
+    res.status(500).json({
+      status: 'fail',
+      message: 'Có lỗi khi lấy dữ liệu'
+    })
+  }
+}
+
+const getSaleHistoryById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await getSaleHistoryByIdService(id);
+    res.status(200).json({
+      status: 'success',
+      data: result
+    })
+  }
+  catch(err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: 'fail',
+      message: err.message || 'Internal server error'
+    })
+  }
+}
+
 module.exports = {
   addOrder,
   getAllOrders,
@@ -200,5 +291,9 @@ module.exports = {
   getRevenueByMonth,
   getPendingOrderQuantity,
   getTop5ProductsSold,
-  getOrderById
+  getOrderById,
+  getSaleHistory,
+  searchOrder,
+  searchSaleHistory,
+  getSaleHistoryById
 }

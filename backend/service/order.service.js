@@ -1,5 +1,7 @@
-const { addOrder, getAllOrders, getOrderStatus, updateOrderStatus, getPendingOrderQuantity, getRevenueByMonth, getTop5ProductsSold, getOrderById } = require("../model/order.model")
+const { addOrder, getAllOrders, getOrderStatus, updateOrderStatus, getPendingOrderQuantity, getRevenueByMonth, getTop5ProductsSold, getOrderById, getSaleHistory, getSaleHistoryByPhoneOrId, getSaleHistoryById, getOrderByPhoneOrId } = require("../model/order.model")
 const validator = require('validator');
+const { getProductById } = require("../model/product.model");
+const { getProductByIdService } = require("./product.service");
 
 const statusTransitions = {
   PENDING: ['CONFIRMED', 'CANCELLED'],
@@ -13,17 +15,20 @@ const getAllOrdersService = async () => {
 }
 
 const addOrderService = async (order) => {
-
-  if(!order.products) {
+  if(!order.products || order.products?.length <= 0) {
     const error = new Error('Hãy chọn sản phẩm trước khi thanh toán');
     error.code = 'NO_PRODUCT_CHOSEN';
     throw error;
   }
 
-  if(order.products.length === 0) {
-    const error = new Error('Hãy chọn sản phẩm trước khi thanh toán');
-    error.code = 'NO_PRODUCT_CHOSEN';
-    throw error;
+
+  for(const item of order.products) {
+    const productInStock = await getProductByIdService(item.id);
+    if(productInStock.quantity < item.quantity) {
+      const error = new Error('Hàng tồn kho không đủ. Bạn có thể chọn sản phẩm khác hoặc mua ít hơn.');
+      error.code = 'QUANTITY_EXCEEDING';
+      throw error;
+    }
   }
 
   if(!order.id) {
@@ -63,8 +68,10 @@ const addOrderService = async (order) => {
     throw error;
   }
 
+  const randomToken =  Math.floor(Math.random() * (999999999999 - 100000000000 + 1));
+  order.code = randomToken;
   const result = await addOrder(order);
-  return result;
+  return order;
 }
 
 const getOrderStatusService = async (id) => {
@@ -128,6 +135,34 @@ const getOrderByIdService = async (id) => {
   return result;
 }
 
+const getSaleHistoryService = async () => {
+  const result = await getSaleHistory();
+  return result;
+}
+
+const getSaleHistoryByPhoneOrIdService = async (searchTerm) => {
+  if(!searchTerm) {
+    return await getSaleHistory();
+  }
+
+  const result = await getSaleHistoryByPhoneOrId(searchTerm);
+  return result;
+}
+
+const getSaleHistoryByIdService = async (id) => {
+  const result = await getSaleHistoryById(id);
+  return result;
+}
+
+const getOrderByPhoneOrIdService = async (searchTerm) => {
+  if(!searchTerm) {
+    return await getAllOrders();
+  }
+
+  const result = await getOrderByPhoneOrId(searchTerm);
+  return result;
+}
+
 module.exports = {
   addOrderService,
   getAllOrdersService,
@@ -136,5 +171,9 @@ module.exports = {
   getPendingOrderQuantityService,
   getRevenueByMonthService,
   getTop5ProductsSoldService,
-  getOrderByIdService
+  getOrderByIdService,
+  getOrderByPhoneOrIdService,
+  getSaleHistoryService,
+  getSaleHistoryByPhoneOrIdService,
+  getSaleHistoryByIdService
 }

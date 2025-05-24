@@ -1,5 +1,6 @@
 const { getUserByEmail } = require('../model/user.model');
 const jwt = require("jsonwebtoken");
+const { hashPassword, comparePassword } = require('../util/hash.util');
 
 const JWT_SECRET = process.env.JWT_SECRET || "khoadeptraivl";
 const loginService = async (email, password) => {
@@ -16,7 +17,8 @@ const loginService = async (email, password) => {
     throw error;
   }
 
-  if(account.password !== password) {
+  const isMatched = await comparePassword(password, account.password);
+  if(!isMatched) {
     const error = new Error('Invalid password');
     error.code = 'INVALID_PASSWORD'; 
     throw error;

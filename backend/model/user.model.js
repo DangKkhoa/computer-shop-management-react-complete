@@ -1,8 +1,9 @@
 
+const { is_buffer } = require('openai/internal/qs/utils.mjs');
 const pool = require('../database/db.js');
 
 const getAllUsers = async () => {
-  const [rows] = await pool.query('SELECT * FROM user');
+  const [rows] = await pool.query('SELECT * FROM user WHERE NOT role = ?', ['ADMIN']);
   return rows;
 }
 
@@ -36,20 +37,56 @@ const getUserQuantity = async () => {
 }
 
 const addUser = async (user) => {
-  const { firstname, lastname, email, phonenumber, password, role, gender } = user;
+  const { firstname, lastname, email, phonenumber, passwordHashed, role, gender } = user;
   const [result] = await pool.query(
     'INSERT INTO user (firstname, lastname, email, phonenumber, password, role, gender) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [firstname, lastname, email, phonenumber, password, role, gender]
+    [firstname, lastname, email, phonenumber, passwordHashed, role, gender]
   );
   return result;
 }
 
 const updateUser = async (id, user) => {
   const { firstname, lastname, email, phonenumber, image, role, gender } = user;
-  const result = await pool.query(
-    'UPDATE user SET firstname = ?, lastname = ?, email = ?, phonenumber = ?, image = ?, role = ?, gender = ? WHERE id = ?',
-    [firstname, lastname, email, phonenumber, image, role, gender, id]
-  );
+  let sql = 'UPDATE user SET ';
+  let update = [];
+  let params = [];
+
+  if(firstname) {
+    update.push('firstname = ?');
+    params.push(firstname);
+  }
+  if(lastname) {
+    update.push('lastname = ?');
+    params.push(lastname);
+  }
+  if(email) {
+    update.push('email = ?');
+    params.push(email);
+  }
+  if(phonenumber) {
+    update.push('phonenumber = ?');
+    params.push(phonenumber);
+  }
+  if(image) {
+    update.push('image = ?');
+    params.push(image);
+  }
+  if(role) {
+    update.push('role = ?');
+    params.push(role);
+  }
+  if(gender) {
+    update.push('gender = ?');
+    params.push(gender);
+  }
+
+  
+  if(update.length > 0) {
+    sql += update.join(', ') + ' WHERE id = ?';
+    params.push(id);
+  }
+
+  const result = await pool.query(sql, params);
 
   return result;
 }
@@ -64,6 +101,21 @@ const setLockUser = async (id, locked) => {
   return result;
 }
 
+const updatePassword = async (id, hashedPassword, table=`user`) => {
+  const [result] = await pool.query(`UPDATE \`${table}\` SET password = ? WHERE id = ?`, [hashedPassword, id]);
+  return result;
+}
+
+const updateToken = async (token, email) => {
+  const [result] = await pool.query('UPDATE user set code = ? WHERE email = ?', [token, email]);
+  return result;
+}
+
+const getCodeByEmail = async (email ) => {
+  const [result] = await pool.query('SELECT code from user WHERE email = ?', [email]);
+  return result;
+}
+
 module.exports = {
   getAllUsers, 
   getUserById, 
@@ -75,5 +127,8 @@ module.exports = {
   updateUser,
   deleteUser, 
   setLockUser,
-  getUserQuantity
+  getUserQuantity,
+  updatePassword,
+  updateToken,
+  getCodeByEmail
 };

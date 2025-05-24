@@ -5,27 +5,6 @@ const { getUserByIdService } = require("../service/user.service");
 
 const JWT_SECRET = process.env.JWT_SECRET || "khoadeptraivl";
 
-const accounts = [
-  {
-    firstname: "Nguyen",
-    lastname: "Van A",
-    phonenumber: "0123456789",
-    email: "test@email.com",
-    password: "123456",
-    role: "ADMIN",
-    image: "default.png",
-  },
-  {
-    firstname: "Nguyen",
-    lastname: "Van B",
-    phonenumber: "0123456788",
-    email: "abc@email.com",
-    password: "abcxyz",
-    role: "SALESPERSON",
-    image: "default.png",
-  }
-]
-
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -51,7 +30,7 @@ const login = async (req, res) => {
         httpOnly: true,
         secure: false,
         sameSite: "Strict",
-        maxAge: 60 * 15 *  1000,
+        maxAge: 60 * 30 *  1000,
       })
 
       res.status(200).json({

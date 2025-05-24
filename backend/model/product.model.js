@@ -84,6 +84,36 @@ const deleteProduct = async (id) => {
   return result;
 }
 
+const updateProduct = async (id, product) => {
+  console.log("name");
+  const { name, imported_price, retailed_price, manufacturer, image, mainboard, cpu, ram, storage, screen, gpu, weight, description} = product;
+  console.log(name);
+  // const [result] = await pool.query(`UPDATE product 
+  //                                     set name = ?, imported_price = ?, retailed_price = ?, 
+  //                                     manufacturer = ?, image = ?, mainboard = ?, 
+  //                                     cpu = ?, ram = ?, storage = ?, screen = ?,
+  //                                     gpu = ?, weight = ?, description = ?
+  //                                     WHERE id = ?`, [name, imported_price, retailed_price, manufacturer, image, mainboard, cpu, ram, storage, screen, gpu, weight, description, id]
+  //                                   );
+
+  let sql = 'UPDATE product SET ';
+  let updated = [];
+  let params = [];
+  for(const [key, value] of Object.entries(product)) {
+    if(value) {
+      updated.push(`${key} = ?`);
+      params.push(value);
+    }
+  }
+  
+  sql += updated.join(', ') + ' WHERE id = ?';
+  params.push(id);
+  const [result] = await pool.query(sql, params);
+
+  // console.log(result);
+  return result;
+}
+
 const filterProducts = async (filter) => {
   const {
     category,
@@ -143,5 +173,6 @@ module.exports = {
   getProductsByPriceMin,
   filterProducts,
   getProductQuantity,
-  getProductsByCategorySorted
+  getProductsByCategorySorted,
+  updateProduct
 };

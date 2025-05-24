@@ -12,7 +12,8 @@ create table if not exists user (
   image varchar(255) default 'default.png',
   is_locked boolean default false,
   role enum('ADMIN', 'SALESPERSON', 'ACCOUNTANT') not null,
-  gender enum('MALE', 'FEMALE')
+  gender enum('MALE', 'FEMALE'),
+  code bigint default 0
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_ci; 
 
 create table if not exists product (
@@ -58,7 +59,8 @@ create table if not exists `order` (
   created_at datetime default current_timestamp,
   payment_method enum('COD', 'CREDIT_CARD', 'BANK_TRANSFER', 'MOMO') not null,
   status enum('PENDING', 'CONFIRMED', 'CANCELLED') default 'PENDING',
-  salesperson_id int
+  salesperson_id int,
+  code varchar(255) unique
   /* foreign key (customer_phone) references customer(phonenumber) */
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_ci;
 
@@ -91,11 +93,15 @@ create table if not exists payment (
 ) engine=InnoDB default charset=utf8mb4 collate utf8mb4_unicode_ci;
 
 
+/* 
+  password admin admin123 
+           btran btran987
+*/
 INSERT INTO user (firstname, lastname, email, phonenumber, password, role, gender)
-VALUES ('Nguyễn', 'Văn A', 'vana@email.com', '0123456789', 'password123', 'ADMIN', 'MALE');
+VALUES ('Nguyễn', 'Văn A', 'admin@email.com', '0123456789', '$2b$10$CTM1CtfcA1lsmZh/zhgFFegxLl0RrVmzOJoTvNCXcCeKsU3N5rxm6', 'ADMIN', 'MALE');
 
 INSERT INTO user (firstname, lastname, email, phonenumber, password, role, gender)
-VALUES ('Trần', 'Văn B', 'btran@email.com', '0991112345', 'btran987', 'SALESPERSON', 'MALE');
+VALUES ('Trần', 'Văn B', 'btran@email.com', '0991112345', '$2b$10$ypOBnXm.IUjQikl5S9TePu5pBxaN5z4QTyHXnUG0awicv6zbO.IyW', 'SALESPERSON', 'MALE');
 
 INSERT INTO user (firstname, lastname, email, phonenumber, password, role, gender)
 VALUES ('Nguyễn Thị', 'Huỳnh T', 'huynht112@email.com', '0118882337', 'huynht123', 'ACCOUNTANT', 'FEMALE');

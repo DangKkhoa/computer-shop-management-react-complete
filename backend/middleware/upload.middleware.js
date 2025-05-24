@@ -7,9 +7,9 @@ const fileFilter = (req, file, cb) => {
   if (allowedImageTypes.includes(file.mimetype)) {
     cb(null, true); // hợp lệ
   } else {
-    const error = new Error('Chỉ cho phép file ảnh (.jpg, .png, .jpeg. .webp)');
+    const error = new Error('Chỉ cho phép file ảnh (.jpg, .png, .jpeg)');
     error.code = 'INVALID_IMAGE';
-    cb(null, false); // từ chối
+    cb(null, error); // từ chối
   }
   
 };
