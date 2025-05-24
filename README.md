@@ -58,8 +58,8 @@ npm run dev
 ![Dashboard](images/Dashboard.png)
 
 ### 📊 Shop
-![Shop](images/Display-product.png)
+![Shop](images/Display-products.png)
 
 ### 🧾 Login
-![Login](imgages/Login.png)
+![Login](image/Login.png)
 
