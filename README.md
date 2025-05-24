@@ -11,8 +11,7 @@ A full-stack web application to manage a computer shop, including user authentic
 - 📦 Product and inventory management
 - 🧾 Sales history and order tracking
 - 🧑‍💼 Admin & employee role support
-- 📊 Dashboard with real-time statistics
-- 🧠 AI-based product recommendations *(via AI route)*
+- 📊 Dashboard with statistics updated automatically
 
 ---
 
